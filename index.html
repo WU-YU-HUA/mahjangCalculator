@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麻將計算器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>麻將計算器</h1>
+      <p class="subtitle">台灣十六張 · 計算進聽、進張與最佳打牌</p>
+    </header>
+
+    <!-- 輸入框 -->
+    <section class="hand-panel">
+      <div class="hand-info">
+        <span class="hand-label">目前手牌</span>
+        <span id="hand-count" class="hand-count">0 / 17</span>
+      </div>
+      <div id="hand-display" class="hand-display tile-row" aria-label="已選手牌"></div>
+    </section>
+
+    <!-- 輸出 -->
+    <section id="result-panel" class="result-panel" aria-live="polite"></section>
+
+    <!-- 鍵盤（桌面） -->
+    <section id="desktop-board" class="desktop-board keyboard" aria-label="選牌鍵盤">
+      <div id="desktop-tile-rows" class="desktop-tile-rows"></div>
+      <div class="keyboard-actions">
+        <button type="button" id="btn-calc" class="action-btn calc-btn">計算</button>
+        <button type="button" id="btn-clear" class="action-btn clear-btn">清除</button>
+        <button type="button" id="btn-backspace" class="action-btn backspace-btn" aria-label="刪除最後一張">
+          <svg class="icon-backspace" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.67-7H22v14zm-6.84-2.99L17.16 16 14 12.84 10.84 16 9.44 14.6 12.6 11.44 9.44 8.28 10.84 6.88 14 10.04 17.16 6.88 18.56 8.28 15.4 11.44 18.56 14.6 17.16 16.01z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 鍵盤（行動版） -->
+    <section class="mobile-board keyboard" aria-label="行動版選牌">
+      <div class="mobile-grid">
+        <div id="mobile-tile-grid" class="mobile-tile-grid"></div>
+
+        <div class="mobile-suit-col">
+          <button type="button" class="suit-switch" data-mobile-suit="0">萬</button>
+          <button type="button" class="suit-switch" data-mobile-suit="2">筒</button>
+          <button type="button" class="suit-switch" data-mobile-suit="1">索</button>
+          <button type="button" class="suit-switch" data-mobile-suit="3">大字</button>
+        </div>
+
+        <div class="mobile-actions">
+          <button type="button" id="btn-calc-mobile" class="action-btn calc-btn">計算</button>
+          <button type="button" id="btn-clear-mobile" class="action-btn clear-btn">清除</button>
+          <button type="button" id="btn-backspace-mobile" class="action-btn backspace-btn" aria-label="刪除最後一張">
+            <svg class="icon-backspace" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.67-7H22v14zm-6.84-2.99L17.16 16 14 12.84 10.84 16 9.44 14.6 12.6 11.44 9.44 8.28 10.84 6.88 14 10.04 17.16 6.88 18.56 8.28 15.4 11.44 18.56 14.6 17.16 16.01z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
