@@ -16,6 +16,15 @@ const TILE_IMAGE_EXT = '.png';
 
 const suitMap = new Map();
 
+// 觸發微小震動的輔助函式
+function triggerHaptic() {
+  // 檢查使用者的裝置與瀏覽器是否支援震動 API
+  if (navigator.vibrate) {
+    // 10 毫秒的短暫震動，模擬實體按鍵的「喀噠」手感
+    navigator.vibrate(10); 
+  }
+}
+
 function cloneSuit(suit) {
   return suit.slice();
 }
@@ -477,6 +486,7 @@ function addTile(suit, rank) {
   if (!canAddTile(suit, rank)) {
     return;
   }
+  triggerHaptic();
   state.hand[suit][rank] += 1;
   renderAll();
 }
