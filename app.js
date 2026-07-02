@@ -352,8 +352,18 @@ function analyzeHand(tilesStr) {
     });
   }
 
-  results.sort((a, b) => a.shanten - b.shanten || b.total - a.total);
-
+  results.sort((a, b) => {
+    // 條件 1：幾進聽 (越少越好，向聽數低的排前面)
+    if (a.shanten !== b.shanten) return a.shanten - b.shanten;
+    
+    // 條件 2：進張牌類數 (越多越好，例如聽 1,4,7 萬就是 3 類)
+    const aTypes = Object.keys(a.ukeire).length;
+    const bTypes = Object.keys(b.ukeire).length;
+    if (aTypes !== bTypes) return bTypes - aTypes;
+    
+    // 條件 3：總進張張數 (越多越好)
+    return b.total - a.total;
+  });
   const uniqueResults = [];
   const discardSet = new Set();
   for (const result of results) {
@@ -497,9 +507,25 @@ function clearHand() {
 }
 
 function renderHandDisplay() {
+  els.handDisplay.replaceChildren(); // 清空舊畫面
   const tiles = handToTiles(state.hand);
   els.handDisplay.classList.toggle('empty', tiles.length === 0);
-  appendTileImages(els.handDisplay, tiles);
+
+  if (tiles.length > 0) {
+    for (const tileCode of tiles) {
+      // 這裡加上我們剛剛在 CSS 寫的 hand-clickable class
+      const img = createTileImage(tileCode, 'tile-img hand-clickable'); 
+      
+      // 綁定點擊移除事件
+      img.addEventListener('click', () => {
+        const suit = SUIT_SUFFIX.indexOf(tileCode[1]);
+        const rank = parseInt(tileCode[0], 10) - 1;
+        removeTileFromHand(suit, rank);
+      });
+      
+      els.handDisplay.appendChild(img);
+    }
+  }
   els.handCount.textContent = `${tiles.length} / ${MAX_HAND}`;
 }
 
