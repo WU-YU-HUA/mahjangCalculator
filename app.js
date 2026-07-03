@@ -677,6 +677,7 @@ function renderAll() {
 }
 
 function runCalculation() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   try {
     const tilesStr = tilesToString(handToTiles(state.hand));
     const result = analyzeHand(tilesStr);
