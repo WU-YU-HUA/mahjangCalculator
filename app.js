@@ -456,6 +456,27 @@ function shantenLabel(shanten) {
 
 /* ── UI ── */
 
+//儲存最後的手牌
+const STORAGE_KEY = 'mahjong_saved_hand';
+
+// 儲存手牌到瀏覽器
+function saveHandToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.hand));
+}
+
+// 從瀏覽器讀取手牌
+function loadHandFromStorage() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      state.hand = JSON.parse(saved);
+    } catch (error) {
+      console.error('讀取手牌紀錄失敗', error);
+      state.hand = createEmptyHand();
+    }
+  }
+}
+
 const state = {
   hand: createEmptyHand(),
   mobileSuit: 0,
@@ -486,8 +507,10 @@ function addTile(suit, rank) {
   if (!canAddTile(suit, rank)) {
     return;
   }
-  triggerHaptic();
+  if (typeof triggerHaptic === 'function') triggerHaptic();
   state.hand[suit][rank] += 1;
+  
+  saveHandToStorage(); // ✨ 新增這行：加入牌時存檔
   renderAll();
 }
 
@@ -496,6 +519,8 @@ function removeTileFromHand(suit, rank) {
     return;
   }
   state.hand[suit][rank] -= 1;
+  
+  saveHandToStorage(); // ✨ 新增這行：移除牌時存檔
   renderAll();
 }
 
@@ -512,6 +537,8 @@ function removeLastTile() {
 
 function clearHand() {
   state.hand = createEmptyHand();
+  
+  saveHandToStorage();
   renderAll();
   renderResult('');
 }
@@ -697,7 +724,7 @@ function runCalculation() {
     }
 
     const fragment = document.createDocumentFragment();
-    
+
     //收縮其他選項，僅顯示最佳選擇
     if (result.results.length > 0) {
       const firstItem = result.results[0];
@@ -763,6 +790,8 @@ function init() {
   els.desktopTileRows = $('desktop-tile-rows');
   els.mobileTileGrid = $('mobile-tile-grid');
   els.mobileSuitBtns = Array.from(document.querySelectorAll('[data-mobile-suit]'));
+
+  loadHandFromStorage();
 
   $('btn-clear').addEventListener('click', clearHand);
   $('btn-calc').addEventListener('click', runCalculation);
