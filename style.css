@@ -449,3 +449,45 @@ body {
     padding-inline: 10px;
   }
 }
+
+.toggle-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.toggle-more-btn:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.toggle-more-btn .chevron-icon {
+  transition: transform 0.25s ease;
+}
+
+.toggle-more-btn.expanded .chevron-icon {
+  transform: rotate(180deg);
+}
+
+.more-results-container {
+  margin-top: 8px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

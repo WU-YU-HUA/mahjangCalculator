@@ -697,11 +697,56 @@ function runCalculation() {
     }
 
     const fragment = document.createDocumentFragment();
-    for (const item of result.results) {
+    
+    //收縮其他選項，僅顯示最佳選擇
+    if (result.results.length > 0) {
+      const firstItem = result.results[0];
       fragment.appendChild(
-        buildResultBlock(shantenLabel(item.shanten), item.ukeire, item.discard),
+        buildResultBlock(shantenLabel(firstItem.shanten), firstItem.ukeire, firstItem.discard)
       );
     }
+
+    // 如果有超過一種打法，就把剩下的包裝進一個可收合的容器裡
+    if (result.results.length > 1) {
+      const moreContainer = document.createElement('div');
+      moreContainer.className = 'more-results-container';
+      moreContainer.style.display = 'none'; // 預設隱藏
+
+      for (let i = 1; i < result.results.length; i++) {
+        const item = result.results[i];
+        moreContainer.appendChild(
+          buildResultBlock(shantenLabel(item.shanten), item.ukeire, item.discard)
+        );
+      }
+
+      // 建立「展開/收合」按鈕
+      const toggleBtn = document.createElement('div');
+      toggleBtn.className = 'toggle-more-btn';
+      toggleBtn.innerHTML = `
+        <span>顯示其餘 ${result.results.length - 1} 種打法</span>
+        <svg class="chevron-icon" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      `;
+
+      // 點擊按鈕時切換顯示狀態
+      toggleBtn.addEventListener('click', () => {
+        if (typeof triggerHaptic === 'function') triggerHaptic(); // 如果有加震動的話
+        
+        const isHidden = moreContainer.style.display === 'none';
+        if (isHidden) {
+          moreContainer.style.display = 'block';
+          toggleBtn.classList.add('expanded');
+          toggleBtn.querySelector('span').textContent = '收合其餘打法';
+        } else {
+          moreContainer.style.display = 'none';
+          toggleBtn.classList.remove('expanded');
+          toggleBtn.querySelector('span').textContent = `顯示其餘 ${result.results.length - 1} 種打法`;
+        }
+      });
+
+      fragment.appendChild(toggleBtn);
+      fragment.appendChild(moreContainer);
+    }
+
     renderResult(fragment);
   } catch (error) {
     const err = document.createElement('p');
